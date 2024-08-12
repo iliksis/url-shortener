@@ -6,7 +6,16 @@
     	<title>URL Shortener</title>
     	<link rel="stylesheet" href="/static/css/styles.css">
 	</head>
-	<body>
-		<h1 class="text-red-500">{{.PageTitle}}</h1>
+	<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-50 flex flex-col gap-10 items-center justify-center h-screen w-screen">
+		<h1 class="font-bold text-lg">Url Shortener</h1>
+		{{if .Success}}
+			<p class="text-green-500">Successfully shortened URL to {{.Url}}</p>
+		{{else}}
+			<form method="post" class="flex flex-row gap-5 w-full max-w-xl">
+				<label for="url" class="sr-only">Type your URL</label>
+				<input autofocus="true" required id="url" type="url" name="url" class="w-full p-2 rounded-md border border-gray-100 dark:border-gray-700 dark:bg-gray-800 text-gray-900 dark:text-gray-50 focus:ring-2 focus:ring-offset-1 focus:ring-purple-500 outline-none">
+				<button type="submit" class="w-max rounded-md bg-purple-500 py-2 px-4 text-white focus:ring-2 focus:ring-offset-1 focus:ring-purple-500 outline-none">Shorten</button>
+			</form>
+		{{end}}
 	</body>
 </html>

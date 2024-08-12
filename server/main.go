@@ -8,7 +8,8 @@ import (
 )
 
 type PageData struct {
-	PageTitle string
+	Success bool
+	Url     string
 }
 
 func main() {
@@ -27,10 +28,19 @@ func main() {
 	tmpl := template.Must(template.ParseFiles(templateDir))
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "POST" {
+			tmpl.Execute(w, nil)
+			return
+		}
+
+		url := r.FormValue("url")
+
 		data := PageData{
-			PageTitle: "Hello World",
+			Success: true,
+			Url:     url,
 		}
 		tmpl.Execute(w, data)
 	})
+
 	http.ListenAndServe(":8080", nil)
 }
