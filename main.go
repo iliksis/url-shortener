@@ -1,10 +1,10 @@
 package main
 
 import (
+	"embed"
+	"html/template"
+	"io/fs"
 	"net/http"
-	"os"
-	"path/filepath"
-	"text/template"
 )
 
 type PageData struct {
@@ -12,20 +12,23 @@ type PageData struct {
 	Url     string
 }
 
+//go:embed internal/assets
+var assets embed.FS
+
+//go:embed internal/templates/index.html
+var tmplSource string
+
 func main() {
-	wd, err := os.Getwd()
+	// provide assets
+	fSys, err := fs.Sub(assets, "internal/assets")
 	if err != nil {
 		panic(err)
 	}
-
-	// provide assets
-	assetsDir := filepath.Join(wd, "/internal/assets")
-	fs := http.FileServer(http.Dir(assetsDir))
+	fs := http.FileServer(http.FS(fSys))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
 	// create template
-	templateDir := filepath.Join(wd, "/internal/templates/index.html")
-	tmpl := template.Must(template.ParseFiles(templateDir))
+	tmpl := template.Must(template.New("index.html").Parse(tmplSource))
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "POST" {

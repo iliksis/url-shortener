@@ -1,0 +1,10 @@
+# flyctl launch added from .gitignore
+
+internal\tailwind\tailwind.run
+tailwind.config.js
+README.md
+LICENSE
+.gitignore
+.dockerignore
+
+fly.toml
